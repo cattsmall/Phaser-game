@@ -1,4 +1,6 @@
-FrozenJS-game
+HTML5 Game
 =============
 
-An experiment in FrozenJS.
+Previously an experiment in FrozenJS, now an experiment in Phaser.
+
+I'm trying to find the easiest-to-learn, most robust HTML5/JavaScript game engine. Yay.
