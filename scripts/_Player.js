@@ -1,6 +1,0 @@
-define([
-  'Player'
-], function(Player){
-
-
-});
