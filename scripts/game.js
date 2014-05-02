@@ -11,7 +11,7 @@ function preload() {
   
   game.load.image('star', 'assets/star.png');
   game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
-  game.load.spritesheet('baddie', 'assets/baddie.png', 128 , 32);
+  game.load.spritesheet('baddie', 'assets/baddie.png', 32 , 32);
 }
 
 var player;
@@ -38,29 +38,51 @@ function create() {
   // Keyboard input
   cursors = game.input.keyboard.createCursorKeys();
   
-  //  The baddies!
+  //  The baddies! Reference a group
   enemies = game.add.group();
   enemies.enableBody = true;
   enemies.physicsBodyType = Phaser.Physics.ARCADE;
+  enemies.safe = false;
 
   createEnemies();
+  enemies.forEach(function(enemy) {
+    enemy.animations.add('safe', [0]);
+    enemy.animations.add('unsafe', [1]);
+  });
+  
+  var enemyTimer = window.setInterval(switchEnemyState, 1000);
   
 }
 
 function createEnemies () {
 
-    for (var y = 0; y < 4; y++)
-    {
-        for (var x = 0; x < 10; x++)
-        {
-            var enemy = enemies.create(x * 48, y * 50, 'baddie');
-            enemy.anchor.setTo(0.5, 0.5);
-            enemy.body.moves = false;
-        }
+  for (var x = 0; x < 10; x++) {
+    var enemy = enemies.create((Math.random() * game.world.width), ((Math.random() * game.world.height) - 32), 'baddie');
+    enemy.body.moves = false;
+
+    if (enemy.x > (game.world.width - 32)) {
+      enemy.x = game.world.width + 32;
+    } else if (enemy.x < 32) {
+      enemy.x = 32;
     }
 
-    enemy.x = 100;
-    enemy.y = 50;
+    if (enemy.y > (game.world.height - 32)) {
+      enemy.y = game.world.height + 32;
+    } else if (enemy.y < 32) {
+      enemy.y = 32;
+    }
+  }
+
+  enemy.x = 100;
+  enemy.y = 50;
+}
+
+function switchEnemyState () {
+  if ( enemies.safe == false ) {
+    enemies.safe = true;
+  } else {
+    enemies.safe = false;
+  }
 }
 
 function update() {
@@ -98,6 +120,18 @@ function update() {
           player.body.velocity.y = 150;
 
           player.animations.play('right');
+      }
+      
+      
+      if (enemies.safe)
+      {
+          enemies.forEach(function(enemy) {
+            enemy.animations.play('safe');
+          });
+      } else {
+        enemies.forEach(function(enemy) {
+          enemy.animations.play('unsafe');
+        });
       }
 
 }
