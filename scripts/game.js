@@ -1,19 +1,11 @@
+// New game + 
 var game = new Phaser.Game(640, 480, Phaser.AUTO, '', {
   preload: preload,
   create: create,
   update: update
 });
 
-function preload() {
-
-  game.load.image('sky', 'assets/sky.png');
-  game.load.image('ground', 'assets/platform.png');
-  
-  game.load.image('star', 'assets/star.png');
-  game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
-  game.load.spritesheet('baddie', 'assets/baddie.png', 32 , 32);
-}
-
+// global variables
 var player;
 
 var enemies;
@@ -32,6 +24,16 @@ var scoreText;
 var introText;
 var gameStarted;
 
+
+// Preload images
+function preload() {
+
+  game.load.image('sky', 'assets/sky.png');
+  game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+  game.load.spritesheet('baddie', 'assets/baddie.png', 32 , 32);
+}
+
+// create the game game (draw)
 function create() {
   game.add.sprite(0, 0, 'sky');
 
@@ -40,60 +42,74 @@ function create() {
   player.animations.add('down', [1]);
   player.animations.add('right', [2]);
   player.animations.add('up', [3]);
+  
+  // Give player the ability to move and collide with objects
   game.physics.enable(player, Phaser.Physics.ARCADE);
   player.body.collideWorldBounds = true;
   
   // Keyboard input
   cursors = game.input.keyboard.createCursorKeys();
   
-  //  The baddies! Reference a group
+  //  The enemies group
   enemies = game.add.group();
   enemies.enableBody = true;
   enemies.physicsBodyType = Phaser.Physics.ARCADE;
+  
+  // Safe variable
   enemies.safe = false;
-
+  
+  // Function to create enemies
   createEnemies();
   
+  // Text -- score
   scoreText = game.add.text(32, 24, scoreString + score);
   scoreText.visible = false;
   
+  // Text -- HP
   hitPointsText = game.add.text(32, 64, hitPointsString + hitPoints);
   hitPointsText.visible = false;
   
-  introText = game.add.text(32, 24, "Click to start playing");
+  // Text -- intro text
+  introText = game.add.text(game.world.centerX/4, 200, "Collect the Piggies when they're weak! \n Click to start the game", { align: "center" } );
+  introText.align = 'center';
   
+  // When right mouse button is clicked, start the game
   game.input.onDown.add(startGame, this);
   
 }
 
+// Create 10 enemies
 function createEnemies() {
-
-  for (var x = 0; x < 10; x++) {
+  // Do this 10 times
+  for (var i = 0; i < 10; i++) {
     var enemy = enemies.create((Math.random() * game.world.width), ((Math.random() * game.world.height) - 32), 'baddie');
+    
+    // Enemy doesn't move
     enemy.body.moves = false;
-
+    
+    // If enemy spawns out of x bounds, move it in
     if (enemy.x > (game.world.width - 32)) {
       enemy.x = game.world.width - 48;
     } else if (enemy.x < 32) {
       enemy.x = 48;
     }
 
+    // If enemy spawns out of y bounds, move it in
     if (enemy.y > (game.world.height - 32)) {
       enemy.y = game.world.height - 48;
     } else if (enemy.y < 32) {
       enemy.y = 48;
     }
   }
-
-  enemy.x = 100;
-  enemy.y = 50;
   
+  // Add safe & unsafe animations to each enemy
   enemies.forEach(function(enemy) {
     enemy.animations.add('safe', [1]);
     enemy.animations.add('unsafe', [0]);
   });
 }
 
+// Function to toggle safe vs dangerous
 function switchEnemyState() {
   if ( enemies.safe == false ) {
     enemies.safe = true;
@@ -102,6 +118,7 @@ function switchEnemyState() {
   }
 }
 
+// Update game so it can be redrawn
 function update() {
       player.body.velocity.setTo(0, 0);
       if (gameStarted) {
@@ -164,14 +181,13 @@ function collideWithEnemy(player, enemy) {
   } else {
     score++;
   }
-  enemy.destroy();
+  enemy.kill();
   
   if ( hitPoints == 0 && enemies.length > 0 ) {
       loseState();
   } else if ( hitPoints > 0 && enemies.length == 0 ) {
       winState();
   }
-  
 }
 
 function startGame() {
