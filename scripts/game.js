@@ -12,17 +12,17 @@ var enemies;
 var livingEnemies = [];
 
 // HP
-var hitPoints = 5;
+var hitPoints;
 var hitPointsString = 'HP: ';
 var hitPointsText;
 
 // score
-var score = 0;
+var score;
 var scoreString = 'Score: ';
 var scoreText;
 
 var introText;
-var gameStarted;
+var gameStarted = false;
 
 
 // Preload images
@@ -59,7 +59,6 @@ function create() {
   enemies.safe = false;
   
   // Function to create enemies
-  createEnemies();
   
   // Text -- score
   scoreText = game.add.text(32, 24, scoreString + score);
@@ -70,8 +69,7 @@ function create() {
   hitPointsText.visible = false;
   
   // Text -- intro text
-  introText = game.add.text(game.world.centerX/4, 200, "Collect the Piggies when they're weak! \n Click to start the game", { align: "center" } );
-  introText.align = 'center';
+  introText = game.add.text(50, 32, "Collect the Piggies when they're weak!\nClick to start the game");
   
   // When right mouse button is clicked, start the game
   game.input.onDown.add(startGame, this);
@@ -120,106 +118,130 @@ function switchEnemyState() {
 
 // Update game so it can be redrawn
 function update() {
-      player.body.velocity.setTo(0, 0);
-      if (gameStarted) {
-        if (cursors.left.isDown)
-        {
-            //  Move to the left
-            player.body.velocity.x = -150;
+  player.body.velocity.setTo(0, 0);
+  if (gameStarted) {
+    if (cursors.left.isDown) {
+        //  Move left
+        player.body.velocity.x = -150;
+        player.animations.play('left');
+    }
 
-            player.animations.play('left');
-        }
-  
-        else if (cursors.right.isDown)
-        {
-            //  Move to the right
-            player.body.velocity.x = 150;
+    else if (cursors.right.isDown) {
+        //  Move right
+        player.body.velocity.x = 150;
+        player.animations.play('right');
+    }
 
-            player.animations.play('right');
-        }
-  
-        if (cursors.up.isDown)
-        {
-            //  Move to the right
-            player.body.velocity.y = -150;
+    if (cursors.up.isDown) {
+        //  Move up
+        player.body.velocity.y = -150;
+        player.animations.play('up');
+    }
 
-            player.animations.play('up');
-        }
-  
-        else if (cursors.down.isDown)
-        {
-            //  Move to the right
-            player.body.velocity.y = 150;
+    else if (cursors.down.isDown) {
+        //  Move down
+        player.body.velocity.y = 150;
+        player.animations.play('down');
+    }
+  }
 
-            player.animations.play('down');
-        }
-      }
-      
-      
-      if (enemies.safe)
-      {
-          enemies.forEach(function(enemy) {
-            enemy.animations.play('safe');
-          });
-      } else {
-        enemies.forEach(function(enemy) {
-          enemy.animations.play('unsafe');
-        });
-      }
-      
-      game.physics.arcade.collide(player, enemies, collideWithEnemy);
-      
-  
-      scoreText.setText(scoreString + score);
-      hitPointsText.setText(hitPointsString + hitPoints);
+  // Animation to play for enemy states
+  if (enemies.safe) {
+      enemies.forEach(function(enemy) {
+        enemy.animations.play('safe');
+      });
+  } else {
+    enemies.forEach(function(enemy) {
+      enemy.animations.play('unsafe');
+    });
+  }
 
+  // Enable player-enemy collision
+  game.physics.arcade.collide(player, enemies, collideWithEnemy);
+
+  // Populate score & HP with updated text
+  scoreText.setText(scoreString + score);
+  hitPointsText.setText(hitPointsString + hitPoints);
 }
 
+// Define the function for colliding with the enemy
 function collideWithEnemy(player, enemy) {
-  if ( enemies.safe == false ) {
+  // Remove HP or increase points depending on enemy state
+  if ( !enemies.safe ) {
     hitPoints--;
   } else {
     score++;
   }
-  enemy.kill();
   
-  if ( hitPoints == 0 && enemies.length > 0 ) {
-      loseState();
+  // Kill the enemy whether or not player gains a point
+  enemy.destroy();
+  
+  // If HP is 0, lose; if HP is more than 0 and enemies are left, win!
+  if ( hitPoints == 0 ) {
+    gameStarted = false;
+    loseState();
+      
   } else if ( hitPoints > 0 && enemies.length == 0 ) {
-      winState();
+    gameStarted = false;
+    winState();
   }
 }
 
+// Define the function for starting the game
 function startGame() {
-  introText.visible = false;
-  scoreText.visible = true;
-  hitPointsText.visible = true;
-  game.time.events.loop(1000, switchEnemyState, this);
-  gameStarted = true;
+  if (!gameStarted) {
+    gameStarted = true;
+    hitPoints = 5;
+    score = 0;
+    
+    // Hide intro
+    introText.visible = false;
+    
+    // Show score and HP
+    scoreText.visible = true;
+    hitPointsText.visible = true;
+    
+    // Start switching enemy states
+    game.time.events.start();
+    game.time.events.loop(1000, switchEnemyState, this);
+    
+    // Create Enemies
+    createEnemies();
+
+  }
 }
 
+// Lose state function
 function loseState() {
+  // Stop timer
+  game.time.events.stop();
 
-    player.body.velocity.setTo(0, 0);
-    
-    introText.text = 'Game Over!';
-    introText.visible = true;
-    
-    scoreText.visible = false;
-    hitPointsText.visible = false;
+  // Game over text
+  introText.text = 'Game Over!\nClick to try again.';
+  introText.visible = true;
+  
+  // Hide score and HP
+  scoreText.visible = false;
+  hitPointsText.visible = false;
 
+  // Allow player to reset game
+  game.input.onDown.add(startGame, this);
 }
 
+// Win state function
 function winState() {
+  // Stop timer
+  game.time.events.stop();
+    
+  // Game over text
+  introText.text = 'Great Job!\nClick to try again.';
+  introText.visible = true;
+  
+  // Hide score and HP
+  scoreText.visible = false;
+  hitPointsText.visible = false;
 
-    player.body.velocity.setTo(0, 0);
-    
-    introText.text = 'Great Job!';
-    introText.visible = true;
-    
-    
-    scoreText.visible = false;
-    hitPointsText.visible = false;
-
+  // Allow player to reset game
+  game.input.onDown.add(startGame, this);
 }
 
