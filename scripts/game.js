@@ -5,11 +5,13 @@ var game = new Phaser.Game(640, 480, Phaser.AUTO, '', {
   update: update
 });
 
-// global variables
+// Global variables
+
+// Player
 var player;
 
+// Enemies
 var enemies;
-var livingEnemies = [];
 
 // HP
 var hitPoints;
