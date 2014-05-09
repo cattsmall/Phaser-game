@@ -6,6 +6,7 @@ var game = new Phaser.Game(640, 480, Phaser.AUTO, '', {
 });
 
 // Global variables
+var gameStarted = false;
 
 // Player
 var player;
@@ -24,8 +25,6 @@ var scoreString = 'Score: ';
 var scoreText;
 
 var introText;
-var gameStarted = false;
-
 
 // Preload images
 function preload() {
