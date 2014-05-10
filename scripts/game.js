@@ -5,11 +5,13 @@ var game = new Phaser.Game(640, 480, Phaser.AUTO, '', {
   update: update
 });
 
-// Global variables
-var gameStarted = false;
+/*---- GLOBAL VARIABLES ----*/
 
 // Player
 var player;
+
+// Cursors
+var cursors;
 
 // Enemies
 var enemies;
@@ -24,11 +26,14 @@ var score;
 var scoreString = 'Score: ';
 var scoreText;
 
+// Intro text
 var introText;
 
-// Preload images
-function preload() {
+// Game Started boolean
+var gameStarted = false;
 
+/*---- PRELOAD IMAGES ----*/
+function preload() {
   game.load.image('sky', 'assets/sky.png');
   game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
   game.load.spritesheet('baddie', 'assets/baddie.png', 32 , 32);
@@ -36,8 +41,10 @@ function preload() {
 
 // create the game game (draw)
 function create() {
+  // Background
   game.add.sprite(0, 0, 'sky');
 
+  // Player art!
   player = game.add.sprite(32, game.world.height - 150, 'dude');
   player.animations.add('left', [0]);
   player.animations.add('down', [1]);
@@ -46,6 +53,8 @@ function create() {
   
   // Give player the ability to move and collide with objects
   game.physics.enable(player, Phaser.Physics.ARCADE);
+  
+  // Collide with edges
   player.body.collideWorldBounds = true;
   
   // Keyboard input
@@ -61,23 +70,79 @@ function create() {
   
   // Function to create enemies
   
-  // Text -- score
-  scoreText = game.add.text(32, 24, scoreString + score);
+  // Text -- hide the score, but set it up so it can be updated
+  scoreText = game.add.text(32, 24, '');
   scoreText.visible = false;
   
-  // Text -- HP
-  hitPointsText = game.add.text(32, 64, hitPointsString + hitPoints);
+  // Text -- hide the HP, but set it up so it can be updated
+  hitPointsText = game.add.text(32, 64, '');
   hitPointsText.visible = false;
   
-  // Text -- intro text
-  introText = game.add.text(50, 32, "Collect the Piggies when they're weak!\nClick to start the game");
+  // Text -- show intro text on load
+  introText = game.add.text(50, 32, "Collect the Pigcats when they're weak!\nClick to start the game");
   
   // When right mouse button is clicked, start the game
   game.input.onDown.add(startGame, this);
   
 }
 
-// Create 10 enemies
+// Update game so it can be redrawn
+function update() {
+  if (gameStarted) {
+    // Left, right, don't move on the x plane when neither is pressed
+    if (cursors.left.isDown) {
+      // If left is pressed, move -150 x
+      player.body.velocity.x = -150;
+      player.animations.play('left');
+    
+    } else if (cursors.right.isDown) {
+      // If right is pressed, move 150 x
+      player.body.velocity.x = 150;
+      player.animations.play('right');
+    
+    } else {
+      player.body.velocity.x = 0;
+    }
+  
+    // Up, down, don't move on the y plane when neither is pressed
+    if (cursors.up.isDown) {
+      // If up is pressed, move -150 y
+      player.body.velocity.y = -150;
+      player.animations.play('up');
+    
+    } else if (cursors.down.isDown) {
+      // If down is pressed, move 150 y
+      player.body.velocity.y = 150;
+      player.animations.play('down');
+    } else {
+      player.body.velocity.y = 0;
+    }
+  
+    // Animation to play for enemy states
+    if (enemies.safe) {
+      // For each enemy, play a safe animation
+        enemies.forEach(function(enemy) {
+        enemy.animations.play('safe');
+      });
+    } else {
+      // For each enemy, play an unsafe animation
+        enemies.forEach(function(enemy) {
+        enemy.animations.play('unsafe');
+      });
+    }
+  }
+
+  // Enable player-enemy collision
+  game.physics.arcade.collide(player, enemies, collideWithEnemy);
+
+  // Populate score & HP with updated text
+  scoreText.setText(scoreString + score);
+  hitPointsText.setText(hitPointsString + hitPoints);
+}
+
+/*---- FUNCTIONS ----*/
+
+// Create 10 enemies. We'll reference this function a few times (start, win, lose)
 function createEnemies() {
   // Do this 10 times
   for (var i = 0; i < 10; i++) {
@@ -115,54 +180,6 @@ function switchEnemyState() {
   } else {
     enemies.safe = false;
   }
-}
-
-// Update game so it can be redrawn
-function update() {
-  player.body.velocity.setTo(0, 0);
-  if (gameStarted) {
-    if (cursors.left.isDown) {
-        //  Move left
-        player.body.velocity.x = -150;
-        player.animations.play('left');
-    }
-
-    else if (cursors.right.isDown) {
-        //  Move right
-        player.body.velocity.x = 150;
-        player.animations.play('right');
-    }
-
-    if (cursors.up.isDown) {
-        //  Move up
-        player.body.velocity.y = -150;
-        player.animations.play('up');
-    }
-
-    else if (cursors.down.isDown) {
-        //  Move down
-        player.body.velocity.y = 150;
-        player.animations.play('down');
-    }
-  }
-
-  // Animation to play for enemy states
-  if (enemies.safe) {
-      enemies.forEach(function(enemy) {
-        enemy.animations.play('safe');
-      });
-  } else {
-    enemies.forEach(function(enemy) {
-      enemy.animations.play('unsafe');
-    });
-  }
-
-  // Enable player-enemy collision
-  game.physics.arcade.collide(player, enemies, collideWithEnemy);
-
-  // Populate score & HP with updated text
-  scoreText.setText(scoreString + score);
-  hitPointsText.setText(hitPointsString + hitPoints);
 }
 
 // Define the function for colliding with the enemy
@@ -217,15 +234,18 @@ function loseState() {
   // Stop timer
   game.time.events.stop();
 
-  // Game over text
-  introText.text = 'Game Over!\nClick to try again.';
+  // Stop the player from moving
+  player.body.velocity.setTo(0, 0);
+  
+  // Set & show game over text
+  introText.text = 'Game Over!\nClick to try again.'; // The \n is a "newline"
   introText.visible = true;
   
   // Hide score and HP
   scoreText.visible = false;
   hitPointsText.visible = false;
 
-  // Allow player to reset game
+  // Allow player to reset game by clicking down
   game.input.onDown.add(startGame, this);
 }
 
@@ -233,16 +253,19 @@ function loseState() {
 function winState() {
   // Stop timer
   game.time.events.stop();
+
+  // Stop the player from moving
+  player.body.velocity.setTo(0, 0);
     
-  // Game over text
-  introText.text = 'Great Job!\nClick to try again.';
+  // Set & show game over text
+  introText.text = 'Great Job!\nClick to try again.'; // The \n is a "newline"
   introText.visible = true;
   
   // Hide score and HP
   scoreText.visible = false;
   hitPointsText.visible = false;
 
-  // Allow player to reset game
+  // Allow player to reset game by clicking down
   game.input.onDown.add(startGame, this);
 }
 
