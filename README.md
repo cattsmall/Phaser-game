@@ -9,6 +9,6 @@ Want to see a game I made? Download the branches ending in **game**.
 
 ##Instructions
 - Download ZIP, open ZIP
-- Drag ZIP to Applications > XAMPP > xamppfiles > htdocs
+- Drag folder to Applications > XAMPP > xamppfiles > htdocs
 - Open XAMPP/manager-osx, start servers
 - Go to http://localhost/Phaser-game-master
