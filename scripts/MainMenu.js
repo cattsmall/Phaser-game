@@ -4,9 +4,10 @@ myGame.MainMenu.prototype = {
   },
 
   create: function() {
+    console.log("MainMenu");
     this.state.start('GamePlay');
   },
-  
+
   update: function() {
     // Update objects & variables
   }

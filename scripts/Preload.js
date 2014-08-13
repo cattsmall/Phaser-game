@@ -12,6 +12,7 @@ myGame.Preload.prototype = {
   },
 
   create: function() {
+    console.log("Preload");
     this.state.start('MainMenu');
   },
   update: function() {
