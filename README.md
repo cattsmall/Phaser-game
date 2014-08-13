@@ -1,4 +1,4 @@
-HTML5 Game
+Phaser Game Development
 =============
 
 Previously an experiment in FrozenJS, now a place to experiment with Phaser.
