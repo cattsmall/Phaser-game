@@ -5,6 +5,7 @@ myGame.GamePlay.prototype = {
 
   create: function() {
     // Create objects
+    console.log("GamePlay");
   },
 
   update: function() {
