@@ -23,11 +23,12 @@
       var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO);
 
       //Create game states
+      game.state.add('Preload', myGame.Preload);
       game.state.add('MainMenu', myGame.MainMenu);
       game.state.add('GamePlay', myGame.GamePlay);
 
       // Start game state
-      game.state.start('MainMenu');
+      game.state.start('Preload');
     </script>
   </body>
 </html>
