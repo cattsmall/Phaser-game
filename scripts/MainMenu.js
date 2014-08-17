@@ -1,14 +1,29 @@
 myGame.MainMenu.prototype = {
   preload: function() {
-    // Preload images for this state
+    this.load.spritesheet('startButton', 'assets/ui/button-start.png', 256, 64);
   },
 
   create: function() {
-    console.log("MainMenu");
-    this.state.start('GamePlay');
+    this.stage.backgroundColor = '#03826n';
+    
+    var titleText = this.add.text(this.world.centerX, game.world.centerY/2, 'Diversity');
+
+    titleText.font = 'Press Start 2P';
+    titleText.fill = '#ffffff';
+    titleText.align = 'center';
+    titleText.fontSize = 30;
+    titleText.anchor.setTo(0.5);
+    
+    var startButton = this.add.button(this.world.centerX, game.world.centerY, 'startButton', this.startGame, game, 1, 0, 2);
+    startButton.anchor.setTo(0.5);
+    
   },
 
   update: function() {
-    // Update objects & variables
+    
+  },
+  startGame: function() {
+    this.state.start('GamePlay1');
   }
 }
+

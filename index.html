@@ -5,7 +5,8 @@
     <script src="scripts/phaser.min.js"></script>
     <script src="scripts/Preload.js"></script>
     <script src="scripts/MainMenu.js"></script>
-    <script src="scripts/GamePlay.js"></script>
+    <script src="scripts/GamePlay1.js"></script>
+    <script src="scripts/GamePlay2.js"></script>
 
     <!-- Added CSS so the margins don't increase the page size. -->
     <style>
@@ -21,15 +22,13 @@
       GAME_HEIGHT = 480;
 
       //Instantiate the game
-      var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO);
+      var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.CANVAS, '', 'Preload', false, false);
 
       //Create game states
       game.state.add('Preload', myGame.Preload);
       game.state.add('MainMenu', myGame.MainMenu);
-      game.state.add('GamePlay', myGame.GamePlay);
-
-      // Start game state
-      game.state.start('Preload');
+      game.state.add('GamePlay1', myGame.GamePlay1);
+      game.state.add('GamePlay2', myGame.GamePlay1);
     </script>
   </body>
 </html>
