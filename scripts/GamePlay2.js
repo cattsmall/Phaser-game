@@ -1,163 +1,51 @@
-myGame.GamePlay1.prototype = {
+myGame.GamePlay2.prototype = {
   preload: function() {
-    this.load.tilemap('map', 'scripts/map.json', null, Phaser.Tilemap.TILED_JSON);
-    this.load.image('tileset', 'assets/tiles.png', 32, 32);
-    this.load.spritesheet('player', 'assets/player.png', 32, 64);
-    this.load.image('dialogWindow', 'assets/ui/dialog.png');
+    // Objects have been preloaded at beginning of game in 'Preload' state
   },
 
   create: function() {
+    //Background color
     this.stage.backgroundColor = "#c2eafe";
-    this.physics.startSystem(Phaser.Physics.ARCADE);
-    game.physics.arcade.gravity.y = 800;
+    
+    //The sun
+    myGame.sun = this.add.sprite( 100, 50, 'objects', 6);
     
     //Add tile map to game
-    myGame.map = this.add.tilemap('map');
-    
-    //Add tileset image to game
-    myGame.map.addTilesetImage('tileset');
-    
-    //Using more than one tile layer? You have to specify the one to collide with
-    myGame.map.setCollisionBetween(0, 3, true, 'Floor');
-    myGame.map.setCollision(26, false, 'BG');
-    
-    //Tile map layers
-    myGame.BG = myGame.map.createLayer('BG');
-    myGame.Floor = myGame.map.createLayer('Floor');
-    
+    myGame.map = game.add.tilemap('map2');
+    myGame.setupTiles();
+  
     //Run function when tile collides
     myGame.map.setTileIndexCallback(26, this.completeStage, this, myGame.BG);
     
-    //Resize layers to screen
-    myGame.BG.resizeWorld();
-    myGame.Floor.resizeWorld();
-        
-    //Player
-    myGame.player = this.add.sprite( 32, 255, 'player');
+    //Objects
+    myGame.object_games = this.add.sprite( 340, 288, 'objects', 3);
+    myGame.object_games.collidedWith = false;
     
-    //Player Animations
-    myGame.player.leftStandingAnim = myGame.player.animations.add("standing-left", [5]);
-    myGame.player.rightStandingAnim = myGame.player.animations.add("standing-right", [0]);
-    myGame.player.leftWalkingAnim = myGame.player.animations.add("walk-left", [6,7,6,5,8,9,8,5]);
-    myGame.player.rightWalkingAnim = myGame.player.animations.add("walk-right", [1,2,1,0,3,4,3,0]);
-    myGame.player.leftJumpingAnim = myGame.player.animations.add("jump-left", [10]);
-    myGame.player.rightJumpingAnim = myGame.player.animations.add("jump-right", [11]);
-    myGame.player.animations.play("standing-right", 1, true);
+    myGame.setupStage();
     
-    //Player's physics
-    this.physics.enable(myGame.player, Phaser.Physics.ARCADE);
-    myGame.player.body.collideWorldBounds = true;
-    
-    // dialog window
-    myGame.dialogWindow = this.add.sprite( this.camera.x, this.world.height - 131, 'dialogWindow');
-    myGame.dialogWindow.visible = false;
-    myGame.dialogText = this.add.text(this.camera.x + 16, 362, '');
-    myGame.dialogText.visible = false;
-
-    myGame.dialogText.font = 'Press Start 2P';
-    myGame.dialogText.fontSize = 12;
-    myGame.dialogText.wordWrap = true;
-    myGame.dialogText.wordWrapWidth = 620;
-    
-    //Create cursor keys
-    myGame.cursors = this.input.keyboard.createCursorKeys();
-    // myGame.cursors.up.onDown.add(this.playerJump, myGame.player);
-    
-    //Enter key
-    myGame.EnterKey = this.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-    myGame.EnterKey.onDown.add(myGame.hideDialog, this);
-    
-   //Camera follows player
-    this.camera.follow(myGame.player);
+    myGame.player.x = 0;
   },
 
   update: function() {
-    this.physics.arcade.collide(myGame.player, myGame.Floor);
-    this.physics.arcade.collide(myGame.player, myGame.BG);
+    myGame.monitorCollision();
+    myGame.monitorMovement();
     
-    myGame.player.body.velocity.x = 0;
-    
-    // If movement is not being ignored
-    if (!myGame.ignoreMovement) {
-      
-      // Left movement, right morement
-      if (myGame.cursors.left.isDown) {
-        
-        // Speed left
-        myGame.player.body.velocity.x = -150;
-        
-        if (myGame.player.body.onFloor()) {
-          // Walking animation
-          myGame.player.animations.play("walk-left", 10, true);
-        } else {
-          // Jumping animation
-          myGame.player.animations.play("jump-left", 1, true);
-        }
-      
-      } else if (myGame.cursors.right.isDown) {
-        
-        // Speed right
-        myGame.player.body.velocity.x = 150;
-      
-        if (myGame.player.body.onFloor()) {
-          
-          // Walking animation
-          myGame.player.animations.play("walk-right", 10, true);
-        } else {
-          
-          // Jumping animation
-          myGame.player.animations.play("jump-right", 1, true);
-        }
+    //Games dialog
+    if (myGame.checkOverlap(myGame.player, myGame.object_games) && !myGame.object_games.collidedWith) {      
+      if (myGame.enterKey.isDown) {
+        myGame.object_games.collidedWith = true;
+        myGame.object_games.kill();
+        myGame.showDialog('My parents and I often played board games when I was young. As I got older, I continued playing games. We didn\'t have a lot of money, so I often had to save for months in order to buy the games I wanted. Games taught me patience, strategy, and the value of time and money.');
       }
-    }
-    
-    // On up callback
-    this.input.keyboard.onUpCallback = function(event) {
-      
-      //If player is on floor
-      if (myGame.player.body.onFloor()) {        
-        if (event.keyCode == myGame.cursors.left.keyCode) {
-          //Play standing animation
-          myGame.player.animations.play("standing-left", 1, true);
-          
-        } else if (event.keyCode == myGame.cursors.right.keyCode) {
-          
-          //Play standing animation
-          myGame.player.animations.play("standing-right", 1, true);
-        }
-      }
-    };
-  
-    // Turn off jumping animation when player is not jumping
-    if (myGame.player.leftJumpingAnim.isPlaying && myGame.player.body.velocity.y == 0) {
-      myGame.player.animations.play("standing-left", 1, true);
-    
-    } else if (myGame.player.rightJumpingAnim.isPlaying && myGame.player.body.velocity.y == 0)  {
-      myGame.player.animations.play("standing-right", 1, true);
     }
   },
   completeStage: function() {
-    if (myGame.cursors.up.isDown) {
-      game.state.start('GamePlay2');  
+    if (myGame.enterKey.isDown) {
+      if (myGame.jumpingTextShown && myGame.object_diary.collidedWith && myGame.object_comic.collidedWith && myGame.object_cat.collidedWith && myGame.object_games.collidedWith) {
+        this.state.start('WinState');  
+      } else {
+        this.state.start('LoseState');  
+      }
     }  
   }
-}
-
-myGame.showDialog = function(text) {
-  myGame.ignoreMovement = true;
-  
-  myGame.dialogWindow.x = game.camera.x;
-  myGame.dialogWindow.visible = true;
-  
-  myGame.dialogText.x = game.camera.x + 16;
-  myGame.dialogText.setText(text);
-  myGame.dialogText.visible = true;
-}
-
-myGame.hideDialog = function() {
-  myGame.ignoreMovement = false;
-
-  myGame.dialogWindow.visible = false;
-  myGame.dialogText.visible = false;
-  myGame.dialogText.setText('');
 }

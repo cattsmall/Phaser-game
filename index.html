@@ -1,12 +1,15 @@
 <!doctype HTML>
 <html>
   <head>
-    <title>My Game</title>
+    <title>A Little About Me</title>
     <script src="scripts/phaser.min.js"></script>
+    <script src="scripts/GlobalVariables.js"></script>
     <script src="scripts/Preload.js"></script>
     <script src="scripts/MainMenu.js"></script>
     <script src="scripts/GamePlay1.js"></script>
     <script src="scripts/GamePlay2.js"></script>
+    <script src="scripts/WinState.js"></script>
+    <script src="scripts/LoseState.js"></script>
 
     <!-- Added CSS so the margins don't increase the page size. -->
     <style>
@@ -28,7 +31,9 @@
       game.state.add('Preload', myGame.Preload);
       game.state.add('MainMenu', myGame.MainMenu);
       game.state.add('GamePlay1', myGame.GamePlay1);
-      game.state.add('GamePlay2', myGame.GamePlay1);
+      game.state.add('GamePlay2', myGame.GamePlay2);
+      game.state.add('WinState', myGame.WinState);
+      game.state.add('LoseState', myGame.LoseState);
     </script>
   </body>
 </html>
