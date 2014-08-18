@@ -44,6 +44,7 @@ myGame.GamePlay1.prototype = {
     if (myGame.checkOverlap(myGame.player, myGame.object_diary) && !myGame.object_diary.collidedWith) {      
       if (myGame.enterKey.isDown) {
         myGame.object_diary.collidedWith = true;
+        myGame.sounds.button.play();
         myGame.object_diary.kill();
         myGame.showDialog('This is my old diary. I used to write in it every day as a teenager. It helped keep me sane as I transformed into an adult.');
       }
@@ -53,6 +54,7 @@ myGame.GamePlay1.prototype = {
     if (myGame.checkOverlap(myGame.player, myGame.object_comic) && !myGame.object_comic.collidedWith) {      
       if (myGame.enterKey.isDown) {
         myGame.object_comic.collidedWith = true;
+        myGame.sounds.pen.play();
         myGame.object_comic.kill();
         myGame.showDialog('As a kid, I loved reading comics because they were beautiful and full of words. I started reading manga as a teenager and spent a lot of time drawing my own comics.');
       }
@@ -62,6 +64,7 @@ myGame.GamePlay1.prototype = {
     if (myGame.checkOverlap(myGame.player, myGame.object_cat) && !myGame.object_cat.collidedWith) {      
       if (myGame.enterKey.isDown) {
         myGame.object_cat.collidedWith = true;
+        myGame.sounds.meow.play();
         myGame.showDialog('I\'ve had many cats. Cats have a great sense of balance when it comes to interaction with others -- they remind me that alone time is important.');
       }
     }

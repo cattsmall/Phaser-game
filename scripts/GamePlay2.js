@@ -34,6 +34,7 @@ myGame.GamePlay2.prototype = {
     if (myGame.checkOverlap(myGame.player, myGame.object_games) && !myGame.object_games.collidedWith) {      
       if (myGame.enterKey.isDown) {
         myGame.object_games.collidedWith = true;
+        myGame.sounds.dice.play();
         myGame.object_games.kill();
         myGame.showDialog('My parents and I often played board games when I was young. As I got older, I continued playing games. We didn\'t have a lot of money, so I often had to save for months in order to buy the games I wanted. Games taught me patience, strategy, and the value of time and money.');
       }

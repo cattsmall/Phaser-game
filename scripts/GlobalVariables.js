@@ -54,6 +54,11 @@ myGame.showNoteText = function(y, text) {
 
 // Set up each stage with the player and dialog windows
 myGame.setupStage = function() {
+  myGame.sounds = [];
+  myGame.sounds.button = game.add.audio('button');
+  myGame.sounds.pen = game.add.audio('pen');
+  myGame.sounds.meow = game.add.audio('meow');
+  myGame.sounds.dice = game.add.audio('dice');
   
   //Physics & gravity
   game.physics.startSystem(Phaser.Physics.ARCADE);

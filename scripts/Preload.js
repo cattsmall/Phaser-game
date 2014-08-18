@@ -19,6 +19,12 @@ myGame.Preload.prototype = {
     
     //Dialog background
     this.load.image('dialogWindow', 'assets/ui/dialog.png');
+    
+    //Sound
+    this.load.audio('button', [ 'assets/audio/button.mp3', 'assets/audio/button.wav' ]);
+    this.load.audio('pen', [ 'assets/audio/pen.mp3', 'assets/audio/pen.wav' ]);
+    this.load.audio('meow', [ 'assets/audio/meow.mp3', 'assets/audio/meow.wav' ]);
+    this.load.audio('dice', [ 'assets/audio/dice.mp3', 'assets/audio/dice.wav' ]);
   },
 
   create: function() {
