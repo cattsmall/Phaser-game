@@ -11,7 +11,7 @@ myGame.Preload.prototype = {
     this.load.tilemap('map2', 'scripts/maps/map2.json', null, Phaser.Tilemap.TILED_JSON);
     
     //Tileset
-    this.load.image('tileset', 'assets/tiles.png', 32, 32);
+    this.load.image('tileset', 'assets/tiles.png');
     
     //Player
     this.load.spritesheet('player', 'assets/player.png', 32, 64);

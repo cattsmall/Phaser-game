@@ -117,7 +117,6 @@ myGame.setupTiles = function() {
   myGame.Floor = myGame.map.createLayer('Floor');
   
   //Resize tile map layers to screen
-  myGame.BG.resizeWorld();
   myGame.Floor.resizeWorld();
   
   //Using more than one tile layer? You have to specify the one to collide with

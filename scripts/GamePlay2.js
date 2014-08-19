@@ -22,8 +22,6 @@ myGame.GamePlay2.prototype = {
     myGame.object_games.collidedWith = false;
     
     myGame.setupStage();
-    
-    myGame.player.x = 0;
   },
 
   update: function() {
