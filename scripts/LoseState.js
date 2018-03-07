@@ -1,11 +1,11 @@
-myGame.LoseState.prototype = {
+myGame.scenes.LoseScene.prototype = {
   preload: function() {
-    // Objects have been preloaded at beginning of game in 'Preload' state
+    // Objects have been preloaded at beginning of game in 'Preload' scene
   },
 
   create: function() {
     this.stage.backgroundColor = "#666666";
-   
+
     myGame.showTitleText(game.world.centerY/2, 'You should try looking at more things.');
     myGame.showNoteText(400, 'Press enter to return to the Main Menu');
 
@@ -16,7 +16,7 @@ myGame.LoseState.prototype = {
   },
   completeStage: function() {
     if (myGame.enterKey.isDown) {
-      this.state.start('MainMenu');
-    }  
+      this.scene.start('MainMenu');
+    }
   }
 }
