@@ -11,13 +11,13 @@ var gamePlay1State = new Phaser.Class({
 
   create: function() {
     //Background color
-    this.stage.backgroundColor = "#c2eafe";
+    // this.stage.backgroundColor = "#c2eafe";
 
     //The sun
     myGame.sun = this.add.sprite( 100, 50, 'objects', 6);
 
     //Add tile map to game
-    myGame.map = game.add.tilemap('map1');
+    myGame.map = this.add.tilemap('map1');
     myGame.setupTiles();
 
     //Run function when tile collides
@@ -31,12 +31,19 @@ var gamePlay1State = new Phaser.Class({
     myGame.object_comic.collidedWith = false;
 
     myGame.object_cat = this.add.sprite( 950, 288, 'objects', 2);
-    myGame.object_cat.animations.add("walk", [4,5]);
+
+    this.anims.create({
+        key: 'cat-walk',
+        frames: this.anims.generateFrameNumbers('objects', { start: 2, end: 5 }),
+        frameRate: myGame.frameRate,
+        repeat: -1
+    });
+
     myGame.object_cat.collidedWith = false;
     myGame.object_cat.checkWorldBounds = true;
     myGame.object_cat.outOfBoundsKill = true;
 
-    myGame.setupStage();
+    myGame.setupStage(this);
   },
 
   update: function() {

@@ -14,10 +14,10 @@ var mainMenuState = new Phaser.Class({
 
     myGame.showTitleText(config.height/4, 'A Little About Me', this);
 
-    myGame.startButton = this.add.image(config.width/2, 300, 'startButton');
+    myGame.startButton = this.add.image(config.width/2, 300, 'startButton').setInteractive();
     myGame.startButton.on('pointerdown', function(pointer) {
       console.log("clicked");
-      this.scene.start('GamePlay1')
+      game.scene.start('GamePlay1');
   });
 
     // myGame.showNoteText(250, '*Instructions* \n\n Arrow keys to move & jump \n Enter to interact with objects');

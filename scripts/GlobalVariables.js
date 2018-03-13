@@ -1,7 +1,8 @@
 // /* --- GAME OBJECT --- */
 // // Declare myGame, the object that contains our game's scenes
 var myGame = {
-  scenes: []
+  scenes: [],
+  frameRate: 10
 };
 
 // /* --- GOOGLE WEBFONT OBJECT --- */
@@ -44,77 +45,107 @@ myGame.showTitleText = function(y, text, gameObject) {
 //   noteText.wordWrapWidth = 500;
 // }
 
-// // Set up each stage with the player and dialog windows
-// myGame.setupStage = function() {
-//   myGame.sounds = {};
-//   myGame.sounds.button = game.add.audio('button');
-//   myGame.sounds.pen = game.add.audio('pen');
-//   myGame.sounds.meow = game.add.audio('meow');
-//   myGame.sounds.dice = game.add.audio('dice');
+// Set up each stage with the player and dialog windows
+myGame.setupStage = function(gameObject) {
+  myGame.sounds = {};
+  myGame.sounds.button = gameObject.sound.add('button');
+  myGame.sounds.pen = gameObject.sound.add('pen');
+  myGame.sounds.meow = gameObject.sound.add('meow');
+  myGame.sounds.dice = gameObject.sound.add('dice');
 
-//   //Physics & gravity
-//   game.physics.startSystem(Phaser.Physics.ARCADE);
-//   game.physics.arcade.gravity.y = 800;
+  //Player
+  myGame.player = gameObject.add.sprite( 32, 256, 'player', 0);
 
-//   //Player
-//   myGame.player = game.add.sprite( 32, 256, 'player', 0);
+  //Player Animations
+  myGame.player.leftStandingAnim = gameObject.anims.create({
+      key: 'player-standing-left',
+      frames: gameObject.anims.generateFrameNumbers('objects', { start: 5, end: 5 }),
+      frameRate: myGame.frameRate,
+      repeat: -1
+  });
 
-//   //Player Animations
-//   myGame.player.leftStandingAnim = myGame.player.animations.add("standing-left", [5]);
-//   myGame.player.rightStandingAnim = myGame.player.animations.add("standing-right", [0]);
-//   myGame.player.leftWalkingAnim = myGame.player.animations.add("walk-left", [6,7,6,5,8,9,8,5]);
-//   myGame.player.rightWalkingAnim = myGame.player.animations.add("walk-right", [1,2,1,0,3,4,3,0]);
-//   myGame.player.leftJumpingAnim = myGame.player.animations.add("jump-left", [10]);
-//   myGame.player.rightJumpingAnim = myGame.player.animations.add("jump-right", [11]);
+  myGame.player.rightStandingAnim = gameObject.anims.create({
+      key: 'player-standing-right',
+      frames: gameObject.anims.generateFrameNumbers('objects', { start: 0, end: 0 }),
+      frameRate: myGame.frameRate,
+      repeat: -1
+  });
 
-//   //Player's physics
-//   game.physics.enable(myGame.player, Phaser.Physics.ARCADE);
-//   myGame.player.body.collideWorldBounds = true;
+  myGame.player.leftWalkingAnim = gameObject.anims.create({
+      key: 'player-walk-left',
+      frames: gameObject.anims.generateFrameNumbers('objects', { start: 5, end: 9 }),
+      frameRate: myGame.frameRate,
+      repeat: -1
+  });
 
-//   // dialog window
-//   myGame.dialogWindow = game.add.sprite( game.camera.x, game.world.height - 131, 'dialogWindow');
-//   myGame.dialogWindow.visible = false;
+  myGame.player.rightWalkingAnim = gameObject.anims.create({
+      key: 'player-walk-right',
+      frames: gameObject.anims.generateFrameNumbers('objects', { start: 1, end: 4 }),
+      frameRate: myGame.frameRate,
+      repeat: -1
+  });
 
-//   //Dialogtext
-//   myGame.dialogText = game.add.text(game.camera.x + 16, 362, '');
-//   myGame.dialogText.font = 'Press Start 2P';
-//   myGame.dialogText.fontSize = 12;
-//   myGame.dialogText.wordWrap = true;
-//   myGame.dialogText.wordWrapWidth = 620;
-//   myGame.dialogText.visible = false;
-//   myGame.dialogText.lineSpacing = 5;
+  myGame.player.leftJumpingAnim = gameObject.anims.create({
+      key: 'player-jump-left',
+      frames: gameObject.anims.generateFrameNumbers('objects', { start: 10, end: 10 }),
+      frameRate: myGame.frameRate,
+      repeat: -1
+  });
 
-//   //Create cursor keys
-//   myGame.cursors = game.input.keyboard.createCursorKeys();
-//   myGame.cursors.up.onDown.add(myGame.playerJump, myGame.player);
+  myGame.player.rightJumpingAnim = gameObject.anims.create({
+      key: 'player-jump-right',
+      frames: gameObject.anims.generateFrameNumbers('objects', { start: 11, end: 11 }),
+      frameRate: myGame.frameRate,
+      repeat: -1
+  });
 
-//   //Enter key
-//   myGame.enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-//   myGame.enterKey.onDown.add(myGame.hideDialog, game);
+  //Player's physics
+  // myGame.player.body.collideWorldBounds = true;
 
-//   //Spacebar key
-//   myGame.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+  // dialog window
+  myGame.dialogWindow = gameObject.add.sprite( gameObject.cameras.main.x, config.height - 131, 'dialogWindow');
+  myGame.dialogWindow.visible = false;
 
-//  //Camera follows player
-//   game.camera.follow(myGame.player);
-// }
+  //Dialogtext
+  myGame.dialogText = gameObject.add.text(gameObject.cameras.main.x + 16, 362, '');
+  myGame.dialogText.font = 'Press Start 2P';
+  myGame.dialogText.fontSize = 12;
+  myGame.dialogText.wordWrap = true;
+  myGame.dialogText.wordWrapWidth = 620;
+  myGame.dialogText.visible = false;
+  myGame.dialogText.lineSpacing = 5;
+
+  //Create cursor keys
+  myGame.cursors = gameObject.input.keyboard.createCursorKeys();
+  // myGame.cursors.up.onDown.add(myGame.playerJump, myGame.player);
+
+  //Enter key
+  myGame.enterKey = gameObject.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+  // myGame.enterKey.onDown.add(myGame.hideDialog, game);
+
+  //Spacebar key
+  myGame.spaceKey = gameObject.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACEBAR);
+
+ //Camera follows player
+  gameObject.cameras.main.startFollow(myGame.player);
+}
 
 // // Setup tiles
-// myGame.setupTiles = function() {
+myGame.setupTiles = function() {
 //   //Add tileset image to game
-//   myGame.map.addTilesetImage('tileset');
+  var tiles = myGame.map.addTilesetImage('tileset');
 
 //   //Tile map layers
-//   myGame.BG = myGame.map.createLayer('BG');
-//   myGame.Floor = myGame.map.createLayer('Floor');
+  myGame.BG = myGame.map.createStaticLayer('BG', tiles, 0, 0);
+  myGame.Floor = myGame.map.createStaticLayer('Floor', tiles, 0, 0);
 
 //   //Resize tile map layers to screen
-//   myGame.Floor.resizeWorld();
+  // myGame.Floor.resizeWorld();
 
 //   //Using more than one tile layer? You have to specify the one to collide with
-//   myGame.map.setCollisionBetween(0, 3, true, 'Floor');
-//   myGame.map.setCollision(26, false, 'BG');
-// }
+  myGame.map.setCollisionBetween(0, 3, true, 'Floor');
+  myGame.map.setCollision(26, false, 'BG');
+}
 
 // /* --- UPDATE FUNCTIONS --- */
 
