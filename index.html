@@ -1,35 +1,34 @@
 <!doctype HTML>
 <html>
-  <head>
-    <title>My Game</title>
-    <script src="scripts/phaser.min.js"></script>
-    <script src="scripts/Preload.js"></script>
-    <script src="scripts/MainMenu.js"></script>
-    <script src="scripts/GamePlay.js"></script>
+<head>
+  <title>My Game</title>
+  <script src="scripts/phaser.min.js"></script>
+  <script src="scripts/Preload.js"></script>
+  <script src="scripts/MainMenu.js"></script>
+  <script src="scripts/GamePlay.js"></script>
 
-    <!-- Added CSS so the margins don't increase the page size. -->
-    <style>
-      body {
-        margin:0;
-      }
-    </style>
-  </head>
-  <body>
-    <script>
-      //Game width & height -- these will not change, so they're capitalized (naming convention)
-      GAME_WIDTH = 640;
-      GAME_HEIGHT = 480;
-
+  <!-- Added CSS so the margins don't increase the page size. -->
+  <style>
+  body {
+    margin:0;
+  }
+</style>
+</head>
+<body>
+  <script>
       //Instantiate the game
-      var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO);
+      var config = {
+        type: Phaser.AUTO,
+        width: 640,
+        height: 480,
+        scenes: []
+      };
 
       //Create game states
-      game.state.add('Preload', myGame.Preload);
-      game.state.add('MainMenu', myGame.MainMenu);
-      game.state.add('GamePlay', myGame.GamePlay);
+      config.scenes.push(myGame.Preload);
+      config.scenes.push(myGame.MainMenu);
+      config.scenes.push(myGame.GamePlay);
 
-      // Start game state
-      game.state.start('Preload');
     </script>
   </body>
-</html>
+  </html>
