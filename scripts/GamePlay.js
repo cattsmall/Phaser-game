@@ -1,14 +1,21 @@
-myGame.GamePlay.prototype = {
-  preload: function() {
-    // Preload images for this state
-  },
+var gamePlayState = new Phaser.Class({
+    // Define scene
+    Extends: Phaser.Scene,
+    initialize: function GamePlay(){
+        Phaser.Scene.call(this, {key: 'GamePlay'});
+    },
+    preload: function() {
+        // Preload images for this state
+    },
 
-  create: function() {
-    // Create objects
-    console.log("GamePlay");
-  },
+    create: function() {
+        // Create objects
+        console.log("GamePlay");
+    },
 
-  update: function() {
-    // Update objects & variables
-  }
-}
+    update: function() {
+        // Update objects & variables
+    }
+});
+
+myGame.scenes.push(gamePlayState);

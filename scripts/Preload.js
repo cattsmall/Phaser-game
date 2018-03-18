@@ -1,21 +1,29 @@
 // Declare myGame, the object that contains our game's states
 var myGame = {
   //Define our game states
-  Preload: function(game) {},
-  MainMenu: function(game) {},
-  GamePlay: function(game) {}
+  scenes: [],
+
+  // Define framerate
+  frameRate: 10
 };
 
-myGame.Preload.prototype = {
-  preload: function() {
+var preloadState = new Phaser.Class({
+    Extends: Phaser.Scene,
+    initialize:
+    function Preload(){
+        Phaser.Scene.call(this, {key: 'Preload'});
+    },
+    preload: function() {
     // Preload images for this state
-  },
+    },
 
-  create: function() {
-    console.log("Preload");
-    this.state.start('MainMenu');
-  },
-  update: function() {
-    // Update objects & variables
-  }
-}
+    create: function() {
+        console.log("Preload");
+        this.state.start('MainMenu');
+    },
+    update: function() {
+        // Update objects & variables
+    }
+});
+
+myGame.scenes.push(preloadState);
