@@ -1,7 +1,8 @@
 var gamePlayState = new Phaser.Class({
     // Define scene
     Extends: Phaser.Scene,
-    initialize: function GamePlay(){
+    initialize:
+    function GamePlay(){
         Phaser.Scene.call(this, {key: 'GamePlay'});
     },
     preload: function() {
