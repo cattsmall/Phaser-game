@@ -3,8 +3,8 @@
 <head>
   <title>My Game</title>
   <script src="scripts/phaser.min.js"></script>
+  <script src="scripts/GlobalVariables.js"></script>
   <script src="scripts/Preload.js"></script>
-  <script src="scripts/MainMenu.js"></script>
   <script src="scripts/GamePlay.js"></script>
 
   <!-- Added CSS so the margins don't increase the page size. -->
@@ -21,6 +21,13 @@
         type: Phaser.AUTO,
         width: 640,
         height: 480,
+        physics: {
+          default: 'arcade',
+          arcade: {
+            gravity: { y: 0 },
+            debug: true
+          }
+        },
         scene: myGame.scenes
       };
 
