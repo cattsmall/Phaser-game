@@ -5,6 +5,7 @@ var gamePlayState = new Phaser.Class({
     function GamePlay(){
         Phaser.Scene.call(this, {key: 'GamePlay'});
     },
+
     preload: function() {
         // Preload images for this state
     },
@@ -19,4 +20,5 @@ var gamePlayState = new Phaser.Class({
     }
 });
 
+// Add scene to list of scenes
 myGame.scenes.push(gamePlayState);

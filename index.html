@@ -1,22 +1,18 @@
-<!doctype HTML>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <title>My Game</title>
+  <!--  Include files in the order that will be referenced  -->
   <script src="scripts/phaser.min.js"></script>
+  <script src="scripts/GlobalVariables.js"></script>
   <script src="scripts/Preload.js"></script>
   <script src="scripts/MainMenu.js"></script>
   <script src="scripts/GamePlay.js"></script>
-
-  <!-- Added CSS so the margins don't increase the page size. -->
-  <style>
-  body {
-    margin:0;
-  }
-</style>
 </head>
+
 <body>
   <script>
-      //Instantiate the game
+      //Game config
       var config = {
         type: Phaser.AUTO,
         width: 640,
@@ -26,7 +22,6 @@
 
       //Instantiate the game
       var game = new Phaser.Game(config);
-
     </script>
   </body>
-  </html>
+</html>

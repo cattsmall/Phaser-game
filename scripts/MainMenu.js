@@ -5,6 +5,7 @@ var mainMenuState = new Phaser.Class({
     function MainMenu(){
         Phaser.Scene.call(this, {key: 'MainMenu'});
     },
+
     preload: function() {
         // Preload images for this state
     },
@@ -19,4 +20,5 @@ var mainMenuState = new Phaser.Class({
     }
 });
 
+// Add scene to list of scenes
 myGame.scenes.push(mainMenuState);

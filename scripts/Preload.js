@@ -1,12 +1,3 @@
-// Declare myGame, the object that contains our game's states
-var myGame = {
-  //Define our game states
-  scenes: [],
-
-  // Define framerate
-  frameRate: 10
-};
-
 var preloadState = new Phaser.Class({
     Extends: Phaser.Scene,
     initialize:
@@ -26,4 +17,5 @@ var preloadState = new Phaser.Class({
     }
 });
 
+// Add scene to list of scenes
 myGame.scenes.push(preloadState);
