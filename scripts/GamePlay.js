@@ -36,7 +36,7 @@ var gamePlayState = new Phaser.Class({
         // Generate intro text
         introText = this.add.text(32, 24, "Click to start playing");
 
-        // Add game slart click event
+        // Add game start click event
         this.input.on('pointerdown', function (){
             if(!gameStarted) {
                 startGame();

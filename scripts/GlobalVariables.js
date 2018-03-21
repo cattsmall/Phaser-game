@@ -90,11 +90,12 @@ function collideWithEnemy(player, enemy) {
     enemiesLeft--;
 
     // End game when necessary
-    if ( hitPoints == 0) {
-        loseState();
-    } else if ( hitPoints > 0 && enemiesLeft == 0 ) {
-        console.log(hitPoints, enemiesLeft);
-        winState();
+    if ( hitPoints <= 0) {
+        killGame();
+        introText.setText('Game Over! Reload to play again.');
+    } else if ( hitPoints > 0 && enemiesLeft < 0 ) {
+        killGame();
+        introText.setText('Great Job! Reload to play again.');
     }
 }
 
@@ -104,16 +105,6 @@ function startGame() {
     hitPointsText.visible = true;
     gameStarted = true;
     finishedGame = false;
-}
-
-function loseState() {
-    killGame();
-    introText.setText('Game Over! Reload to play again.');
-}
-
-function winState() {
-    killGame();
-    introText.setText('Great Job! Reload to play again.');
 }
 
 function killGame(){
